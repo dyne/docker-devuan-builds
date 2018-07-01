@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if test "$1" = ""; then
+	echo "Choose what image to run in a container, available:"
+	docker image ls | grep '^dyne/devuan'
+else
+	docker run -it dyne/devuan:$1
+fi

@@ -1,0 +1,23 @@
+FROM registry.gitlab.com/paddy-hack/devuan/slim:beowulf
+LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
+	  homepage="https://github.com/dyne/docker-base-builds"
+
+ENV LEIN_VERSION=2.8.1 \
+	LEIN_INSTALL=/usr/local/bin/ \
+	PATH=$PATH:$LEIN_INSTALL \
+	LEIN_ROOT=1
+
+WORKDIR /root
+
+RUN mkdir -p /usr/share/man/man1/ \
+	&& apt-get update \
+	&& apt-get upgrade -y -q \
+	&& apt-get install -y -q apt-utils \
+ 	&& apt-get install -y -q --allow-downgrades --no-install-recommends \
+	   wget git procps iproute2 tmux screen htop iftop acl \
+	   net-tools vim-tiny nano-tiny adduser dmsetup inetutils-ping netbase \
+	   bash bash-builtins bash-completion openssh-client \
+ 	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
+
+CMD /bin/bash

@@ -1,0 +1,43 @@
+#
+# Build this image with the command
+#   docker build -f docker/build -t dyne/clojure:latest
+#
+# Then run with the command
+#   docker run -p 3000:3000 -it dyne/clojure:latest
+#
+
+FROM dyne/devuan:beowulf
+LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
+	  homepage="https://github.com/dyne/docker-base-builds"
+# ENV VERSION=AUTO_STRICT
+
+ENV LEIN_VERSION=2.8.1 \
+	LEIN_INSTALL=/usr/local/bin/ \
+	PATH=$PATH:$LEIN_INSTALL \
+	LEIN_ROOT=1
+
+WORKDIR /root
+
+## needed for update-alternatives to not fail
+RUN mkdir -p /usr/share/man/man1/ \
+	&& apt-get update \
+ 	&& apt-get install -y -q --allow-downgrades --no-install-recommends \
+       openjdk-8-jdk-headless \
+ 	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& mkdir -p $LEIN_INSTALL \
+  	&& wget -q https://raw.githubusercontent.com/technomancy/leiningen/$LEIN_VERSION/bin/lein-pkg \
+  	&& echo "Comparing lein-pkg checksum ..." \
+    && echo "019faa5f91a463bf9742c3634ee32fb3db8c47f0 *lein-pkg" | sha1sum -c - \
+	&& mv lein-pkg $LEIN_INSTALL/lein \
+	&& chmod 0755 $LEIN_INSTALL/lein \
+	&& wget -q https://github.com/technomancy/leiningen/releases/download/$LEIN_VERSION/leiningen-$LEIN_VERSION-standalone.zip \
+	&& mkdir -p /usr/share/java \
+	&& mv leiningen-$LEIN_VERSION-standalone.zip /usr/share/java/leiningen-$LEIN_VERSION-standalone.jar \
+	&& grep -v GNOME.Accessibility.AtkWrapper \
+		 /etc/java-8-openjdk/accessibility.properties \
+		 	> /tmp/java.accessibility.properties \
+	&& mv /tmp/java.accessibility.properties \
+	   	  /etc/java-8-openjdk/accessibility.properties
+
+CMD /bin/bash
