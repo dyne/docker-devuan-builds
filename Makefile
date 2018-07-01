@@ -1,9 +1,11 @@
 all:
 
-devuan: FORCE
+beowulf: FORCE
 	docker build -f devuan/Dockerfile.beowulf \
 		-t dyne/devuan:beowulf \
 		--force-rm .
+
+ascii: FORCE
 	docker build -f devuan/Dockerfile.ascii \
 		-t dyne/devuan:ascii \
 		--force-rm .
