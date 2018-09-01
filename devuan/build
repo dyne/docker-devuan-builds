@@ -1,0 +1,30 @@
+#!/bin/bash
+
+distro=$1
+name=dyne/devuan:${distro}-debuild
+package=$2
+
+echo "Build image: $name"
+tmp=$(mktemp)
+cat << EOF > $tmp
+#!/usr/bin/env bash
+apt-get build-dep $package
+apt-get source $package 2>&1| tee $package-debuild.log
+pdir=\$(cat $package-debuild.log | awk '/dpkg-source.*info: extracting/ {print \$6}')
+echo "Package source downloaded in \$pdir"
+cd \$pdir && debuild -b -uc -us
+EOF
+
+container=$(docker run -it -d $name)
+echo "Build container: $container"
+docker cp $tmp $container:/root/build-$package.sh
+
+# dtmp=$(mktemp)
+# cat << EOF > $dtmp
+# FROM dyne/devuan-builder:ascii
+# COPY $tmp build-$package.sh
+# CMD /bin/bash -c build-$package.sh
+# EOF
+
+docker exec -it $container bash /root/build-$package.sh \
+	   && docker cp $container:/root $package

@@ -10,6 +10,16 @@ ascii: FORCE
 		-t dyne/devuan:ascii \
 		--force-rm .
 
+ascii-debuild: FORCE
+	docker build --no-cache -f devuan/Dockerfile.ascii-debuild \
+		-t dyne/devuan:ascii-debuild \
+		--force-rm .
+
+beowulf-debuild: FORCE
+	docker build --no-cache -f devuan/Dockerfile.beowulf-debuild \
+		-t dyne/devuan:beowulf-debuild \
+		--force-rm .
+
 clojure: FORCE
 	docker build --no-cache -f clojure/Dockerfile \
 		   -t dyne/clojure:latest \
