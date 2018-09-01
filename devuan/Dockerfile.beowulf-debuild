@@ -1,4 +1,4 @@
-FROM dyne/devuan:ascii
+FROM dyne/devuan:beowulf
 LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
 	  homepage="https://github.com/dyne/docker-base-builds"
 
