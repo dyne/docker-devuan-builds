@@ -1,17 +1,17 @@
 all:
 
 beowulf: FORCE
-	docker build -f devuan/Dockerfile.beowulf \
+	docker build --no-cache -f devuan/Dockerfile.beowulf \
 		-t dyne/devuan:beowulf \
 		--force-rm .
 
 ascii: FORCE
-	docker build -f devuan/Dockerfile.ascii \
+	docker build --no-cache -f devuan/Dockerfile.ascii \
 		-t dyne/devuan:ascii \
 		--force-rm .
 
 clojure: FORCE
-	docker build -f clojure/Dockerfile \
+	docker build --no-cache -f clojure/Dockerfile \
 		   -t dyne/clojure:latest \
 		   --force-rm .
 
