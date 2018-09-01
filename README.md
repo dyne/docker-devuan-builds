@@ -8,7 +8,11 @@ Powered by:
 
 Docker build scripts for base images published on https://hub.docker.com/u/dyne/
 
-## Usage instructions
+More base images are are made for use by Dyne.org software and are free to use by anyone.
+
+Main repository: http://github.com/dyne/docker-devuan-builds
+
+## Basic usage instructions
 
 All Devuan codenames are tagged.
 
@@ -17,7 +21,6 @@ For Devuan stable (ASCII) use:
 docker pull dyne/devuan:ascii
 docker run -it dyne/devuan:ascii
 ```
-
 
 For Devuan testing (Beowulf) use:
 ```
@@ -31,7 +34,22 @@ docker pull dyne/devuan:ceres
 docker run -it dyne/devuan:ceres
 ```
 
-More base images are are made for use by Dyne.org software and are free to use by others.
+In the cloned git repository the `./devuan/run` script is provided to
+automate the process of downloading and starting an image.
+
+## Debuild usage
+
+Special images tagged with `-debuild` are made available to facilitate building any deb-src package on Devuan.
+
+In the cloned git repository the `./devuan/build` script is provided
+to automate the process of downloading sources (`apt-get source`) and
+building them (`debuild`). For instance:
+
+```
+./devuan/build hasciicam ascii
+```
+
+Will build the hasciicam package from source using Devuan ASCII.
 
 ## Developers
 

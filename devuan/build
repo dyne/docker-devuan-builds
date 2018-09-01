@@ -1,14 +1,26 @@
 #!/bin/bash
+#
+# small docker build helper for Devuan
+#
 
 distro=$1
 name=dyne/devuan:${distro}-debuild
 package=$2
 
+# check for correct usage
+usage() { echo "usage: ./devuan/build codename packagename"; }
+if ! [ -d devuan ]; then
+   echo "launch from base source dir: ./devuan/build"
+   usage ; exit 1 ; fi
+if [ "$2" = "" ]; then usage ; exit 1; fi
+
+echo "Package to build: $package"
 echo "Build image: $name"
+
 tmp=$(mktemp)
 cat << EOF > $tmp
 #!/usr/bin/env bash
-apt-get build-dep $package
+apt-get build-dep -yy $package
 apt-get source $package 2>&1| tee $package-debuild.log
 pdir=\$(cat $package-debuild.log | awk '/dpkg-source.*info: extracting/ {print \$6}')
 echo "Package source downloaded in \$pdir"
@@ -18,13 +30,13 @@ EOF
 container=$(docker run -it -d $name)
 echo "Build container: $container"
 docker cp $tmp $container:/root/build-$package.sh
-
-# dtmp=$(mktemp)
-# cat << EOF > $dtmp
-# FROM dyne/devuan-builder:ascii
-# COPY $tmp build-$package.sh
-# CMD /bin/bash -c build-$package.sh
-# EOF
+rm $tmp
 
 docker exec -it $container bash /root/build-$package.sh \
 	   && docker cp $container:/root $package
+if [ $? = 0 ]; then
+	echo "Build successful! Results copied in ${package}:"
+	ls -l $package/
+else
+	echo "Error, build failed."
+fi
