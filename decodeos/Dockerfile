@@ -7,6 +7,8 @@
 #
 
 FROM dyne/devuan:beowulf
+ENV debian buster
+
 LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
 	  homepage="https://github.com/decodeproject/decode-os"
 
@@ -14,25 +16,24 @@ ENV LC_ALL C
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV DYNESDK=https://sdk.dyne.org:4443/job \
-	NETDATA_VERSION=1.9.0 \
+	NETDATA_VERSION=1.10.0 \
 	STEM_VERSION=1.6.0 \
 	STEM_GIT=https://git.torproject.org/stem.git
 
-ARG BUILD_DEPS="build-essential zlib1g-dev gcc make autoconf automake pkg-config uuid-dev golang"
-
+ENV BUILD_DEPS="build-essential zlib1g-dev gcc make autoconf automake pkg-config uuid-dev golang"
 WORKDIR /root
 
 # Tor repository
 RUN gpg --recv A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 \
-	&& gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add - \
-    && echo "deb https://deb.torproject.org/torproject.org buster main" > /etc/apt/sources.list.d/tor.list \
-	&& echo "deb-src https://deb.torproject.org/torproject.org buster main" >> /etc/apt/sources.list.d/tor.list
+&& gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+RUN echo "deb https://deb.torproject.org/torproject.org $debian main" \
+	>> /etc/apt/sources.list
 
 # Nodejs repository
 ADD https://deb.nodesource.com/gpgkey/nodesource.gpg.key nodesource.gpg.key
-RUN apt-key add nodesource.gpg.key \
-	&& echo "deb https://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
-	&& echo "deb-src https://deb.nodesource.com/node_8.x stretch main" >> /etc/apt/sources.list.d/nodesource.list
+RUN apt-key add nodesource.gpg.key
+RUN	echo "deb https://deb.nodesource.com/node_8.x $debian main" \
+	>> /etc/apt/sources.list
 
 RUN mkdir -p /usr/share/man/man1/ \
 	&& apt-get -yy update && apt-get -yy upgrade \
@@ -80,10 +81,18 @@ RUN tar xf netdata.tgz && cd netdata-$NETDATA_VERSION \
 	&& ./netdata-installer.sh --dont-wait --dont-start-it \
 	&& cd - && rm -rf netdata.tgz netdata-$NETDATA_VERSION
 
+# Openresty
+ADD https://openresty.org/package/pubkey.gpg openresty.gpg
+RUN apt-key add openresty.gpg
+RUN echo "deb http://openresty.org/package/debian stretch openresty" \
+>> /etc/apt/sources.list
+RUN apt-get -yq update \
+&& apt-get -yq install --no-install-recommends openresty
+
 # cleanup
 RUN apt-get -yq remove --purge $BUILD_DEPS \
-	&& apt-get -yq --purge autoremove && apt-get -yq clean \
-	&& npm cache clean --force && npm uninstall -g npm
+&& apt-get -yq --purge autoremove && apt-get -yq clean \
+&& npm cache clean --force && npm uninstall -g npm
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
@@ -91,6 +100,8 @@ RUN groupadd -g 6000 app && useradd -r -u 6000 -g app -d /home/app app
 WORKDIR /home/app
 RUN chown -R app:app /home/app
 
+# Tor's socks5
+EXPOSE 9150
 # supervisor
 EXPOSE 9001 9001
 # redis-commander

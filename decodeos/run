@@ -1,3 +1,12 @@
 #!/bin/sh
 
-docker run -it -p 9001:9001 dyne/decodeos:latest
+ports=""
+exposed=$(cat decodeos/exposed-ports);
+for i in $exposed; do
+	ports="$ports -p $i"
+done
+echo "Starting DECODE OS Docker"
+for p in $exposed; do
+	echo "port exposed: http://localhost:`echo $p | cut -d: -f2`"
+done
+docker run -it $ports dyne/decodeos:latest
