@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/paddy-hack/devuan/slim:ceres
+FROM registry.gitlab.com/paddy-hack/devuan/slim:%REL%
 LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
 	  homepage="https://github.com/dyne/docker-base-builds"
 
@@ -8,7 +8,7 @@ ENV	PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin \
 
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 
-RUN echo "deb http://deb.devuan.org/merged ceres main" > /etc/apt/sources.list
+RUN echo "deb http://deb.devuan.org/merged %REL% main" > /etc/apt/sources.list
 RUN mkdir -p /usr/share/man/man1/ \
 && apt-get update \
 && apt-get upgrade -y -q \

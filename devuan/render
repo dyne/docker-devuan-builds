@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# run to generate almost identical dockerfiles from a single template
+# Docker.template and Docker.template-debuild
+
+for i in ascii beowulf ceres; do
+	echo "$i"
+	sed "s/%REL%/${i}/g" Dockerfile.template > Dockerfile.${i};
+	sed "s/%REL%/${i}/g" Dockerfile.template-debuild > Dockerfile.${i}-debuild;
+done

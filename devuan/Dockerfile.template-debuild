@@ -1,8 +1,8 @@
-FROM dyne/devuan:ascii
+FROM dyne/devuan:%REL%
 LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
 homepage="https://github.com/dyne/docker-base-builds"
 
-RUN echo "deb-src http://deb.devuan.org/merged ascii main" >> /etc/apt/sources.list
+RUN echo "deb-src http://deb.devuan.org/merged %REL% main" >> /etc/apt/sources.list
 RUN mkdir -p /usr/share/man/man1/ \
 && apt-get update \
 && apt-get upgrade -y -q \

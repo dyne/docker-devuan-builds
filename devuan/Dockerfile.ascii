@@ -8,17 +8,18 @@ ENV	PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin \
 
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 
+RUN echo "deb http://deb.devuan.org/merged ascii main" > /etc/apt/sources.list
 RUN mkdir -p /usr/share/man/man1/ \
-	&& apt-get update \
-	&& apt-get upgrade -y -q \
-	&& apt-get install -y -q apt-utils \
- 	&& apt-get install -y -q --allow-downgrades --no-install-recommends \
-	   wget git procps iproute2 tmux screen htop iftop acl netcat-openbsd \
-	   net-tools vim-tiny nano-tiny adduser dmsetup inetutils-ping netbase \
-	   bash bash-builtins bash-completion openssh-client \
- 	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/* \
-	&& chmod +x /tini
+&& apt-get update \
+&& apt-get upgrade -y -q \
+&& apt-get install -y -q apt-utils \
+&& apt-get install -y -q --allow-downgrades --no-install-recommends \
+   wget git procps iproute2 tmux screen htop iftop acl netcat-openbsd \
+   net-tools vim-tiny nano-tiny adduser dmsetup inetutils-ping netbase \
+   bash bash-builtins bash-completion openssh-client \
+&& apt-get clean \
+&& rm -rf /var/lib/apt/lists/* \
+&& chmod +x /tini
 
 WORKDIR /root
 ENTRYPOINT ["/tini", "--"]
