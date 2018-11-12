@@ -1,6 +1,5 @@
 all:
 
-
 ceres: FORCE
 	docker build --no-cache -f devuan/Dockerfile.ceres \
 		-t dyne/devuan:ceres \

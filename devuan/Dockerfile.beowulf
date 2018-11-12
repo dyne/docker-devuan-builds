@@ -4,21 +4,25 @@ LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
 
 ENV	PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin \
     TINI_VERSION=v0.18.0 \
-	TINI_SUBREAPER=1
+	TINI_SUBREAPER=1 \
+	DEBIAN_FRONTEND=noninteractive
 
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 
 RUN echo "deb http://deb.devuan.org/merged beowulf main" > /etc/apt/sources.list
-RUN mkdir -p /usr/share/man/man1/ \
-&& apt-get update \
-&& apt-get upgrade -y -q \
-&& apt-get install -y -q apt-utils \
-&& apt-get install -y -q --allow-downgrades --no-install-recommends \
+
+RUN p=/usr/share/man/man && mkdir -p ${p}1 ${p}2 ${p}3 ${p}4 ${p}5 ${p}6 ${p}7
+RUN apt-get update -y -q && apt-get install -y -q --no-install-recommends apt-utils
+
+# bug in dash package -12Nov2018 with hellekin
+RUN update-alternatives --force --all --skip-auto
+RUN apt-mark hold dash && apt-get upgrade -y -q
+
+RUN apt-get install -y -q --allow-downgrades --no-install-recommends \
    wget git procps iproute2 tmux screen htop iftop acl netcat-openbsd \
    net-tools vim-tiny nano-tiny adduser dmsetup inetutils-ping netbase \
-   bash bash-builtins bash-completion openssh-client gnupg1 ca-certificates \
+   bash bash-builtins bash-completion openssh-client gnupg ca-certificates \
 && apt-get clean \
-&& rm -rf /var/lib/apt/lists/* \
 && chmod +x /tini
 
 WORKDIR /root
