@@ -20,6 +20,10 @@ ascii: FORCE
 		-t dyne/devuan:ascii \
 		--force-rm .
 
+jessie: FORCE
+	docker build --no-cache -f devuan/Dockerfile.jessie \
+		-t dyne/devuan:jessie \
+		--force-rm .
 
 ascii-debuild: FORCE
 	docker build --no-cache -f devuan/Dockerfile.ascii-debuild \
