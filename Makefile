@@ -39,12 +39,12 @@ beowulf-debuild: FORCE
 
 ascii-clojure: FORCE
 	docker build --no-cache -f clojure/Dockerfile.ascii \
-		-t dyne/clojure:latest \
+		-t dyne/clojure:ascii \
 		--force-rm .
 
 beowulf-clojure: FORCE
 	docker build --no-cache -f clojure/Dockerfile.beowulf \
-		   -t dyne/clojure:latest \
+		   -t dyne/clojure:beowulf \
 		   --force-rm .
 
 FORCE:
