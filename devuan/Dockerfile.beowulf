@@ -3,7 +3,7 @@ LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
 	  homepage="https://github.com/dyne/docker-base-builds"
 
 ENV	PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin \
-    TINI_VERSION=v0.18.0 \
+    TINI_VERSION=v0.19.0 \
 	TINI_SUBREAPER=1 \
 	DEBIAN_FRONTEND=noninteractive
 
