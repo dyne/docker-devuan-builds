@@ -10,6 +10,11 @@ ceres-debuild: FORCE
 		-t dyne/devuan:ceres-debuild \
 		--force-rm .
 
+chimaera: FORCE
+	docker build --no-cache -f devuan/Dockerfile.chimaera \
+		-t dyne/devuan:chimaera \
+		--force-rm .
+
 beowulf: FORCE
 	docker build --no-cache -f devuan/Dockerfile.beowulf \
 		-t dyne/devuan:beowulf \
