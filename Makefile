@@ -39,7 +39,12 @@ beowulf-debuild: FORCE
 	docker build --no-cache -f devuan/Dockerfile.beowulf-debuild \
 		-t dyne/devuan:beowulf-debuild \
 		--force-rm .
-
+# Rust targets
+beowulf-rust: FORCE 
+	docker build --no-cache -f rust/Dockerfile.beowulf \
+		   -t dyne/rust:beowulf \
+		   --force-rm .
+ 
 # Clojure targets
 
 ascii-clojure: FORCE
@@ -47,7 +52,7 @@ ascii-clojure: FORCE
 		-t dyne/clojure:ascii \
 		--force-rm .
 
-beowulf-clojure: FORCE
+beowulf-clojure: FORCE 
 	docker build --no-cache -f clojure/Dockerfile.beowulf \
 		   -t dyne/clojure:beowulf \
 		   --force-rm .

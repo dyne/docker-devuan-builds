@@ -1,0 +1,27 @@
+#
+# Build this image with the command
+#   docker build -f docker/build -t dyne/rust:latest
+#
+# Then run with the command
+#   docker run -it dyne/rust:latest
+#
+
+FROM dyne/devuan:beowulf
+LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
+	  homepage="https://github.com/dyne/docker-base-builds"
+# ENV VERSION=AUTO_STRICT
+
+WORKDIR /root
+
+## needed for update-alternatives to not fail
+RUN mkdir -p /usr/share/man/man1/ \
+	&& apt-get update -y -q \
+ 	&& apt-get install -y -q --allow-downgrades --no-install-recommends \
+	git clang libclang-dev llvm llvm-dev make xxd cmake zsh musl-dev meson curl \
+ 	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* 
+
+RUN wget https://sh.rustup.rs -O rustup && sh ./rustup -y --default-toolchain nightly
+#	&& rustup install -y nightly && rustup default -y nightly
+
+CMD /bin/bash
