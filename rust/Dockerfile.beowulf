@@ -17,9 +17,12 @@ WORKDIR /root
 RUN mkdir -p /usr/share/man/man1/ \
 	&& apt-get update -y -q \
  	&& apt-get install -y -q --allow-downgrades --no-install-recommends \
-	git clang libclang-dev llvm llvm-dev make xxd cmake zsh musl-dev meson curl \
+	git clang libclang-dev llvm llvm-dev make xxd cmake zsh musl-dev curl python3-pip \
  	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* 
+
+## use latest meson (zenroom rust cargo fix 15/6/2021)
+RUN pip3 install meson ninja
 
 RUN wget https://sh.rustup.rs -O rustup && sh ./rustup -y --default-toolchain nightly
 #	&& rustup install -y nightly && rustup default -y nightly
