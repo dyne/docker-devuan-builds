@@ -24,7 +24,12 @@ RUN mkdir -p /usr/share/man/man1/ \
 ## use latest meson (zenroom rust cargo fix 15/6/2021)
 RUN pip3 install meson ninja
 
+ENV RUSTUP_HOME=/opt/rust \
+    CARGO_HOME=/opt/rust
+
 RUN wget https://sh.rustup.rs -O rustup && sh ./rustup -y --default-toolchain nightly
 #	&& rustup install -y nightly && rustup default -y nightly
+
+ENV PATH=/opt/rust/bin:$PATH
 
 CMD /bin/bash
