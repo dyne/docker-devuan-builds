@@ -44,6 +44,12 @@ beowulf-rust: FORCE
 	docker build --no-cache -f rust/Dockerfile.beowulf \
 		   -t dyne/rust:beowulf \
 		   --force-rm .
+
+chimaera-rust: FORCE 
+	docker build --no-cache -f rust/Dockerfile.chimaera \
+		   -t dyne/rust:chimaera \
+		   --force-rm .
+
  
 # Clojure targets
 
