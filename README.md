@@ -1,10 +1,10 @@
 # Devuan GNU+Linux - Docker Base Images
 
-[![software by Dyne.org](https://zenroom.dyne.org/img/software_by_dyne.png)](http://www.dyne.org)
+[![software by Dyne.org](https://files.dyne.org/software_by_dyne.png)](http://www.dyne.org)
 
 Powered by:
 
-[![powered by Devuan.org](https://devuan.org/ui/img/devuan-logo-purpy.png)](https://devuan.org)
+[![powered by Devuan.org](https://www.devuan.org/ui/img/devuan-logo.png)](https://devuan.org)
 
 Docker build scripts for base images published on https://hub.docker.com/u/dyne/
 
