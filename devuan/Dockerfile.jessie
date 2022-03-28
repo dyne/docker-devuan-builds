@@ -2,28 +2,37 @@ FROM registry.gitlab.com/paddy-hack/devuan/slim:jessie
 LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
 	  homepage="https://github.com/dyne/docker-base-builds"
 
-ENV	PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin \
-    TINI_VERSION=v0.18.0 \
-	TINI_SUBREAPER=1 \
-	DEBIAN_FRONTEND=noninteractive
+ENV PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin \
+    TINI_VERSION=v0.19.0 \
+    TINI_SUBREAPER=1 \
+    DEBIAN_FRONTEND=noninteractive
 
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 
 RUN echo "deb http://deb.devuan.org/merged jessie main" > /etc/apt/sources.list
 
+COPY apt-conf-autoremove-suggests /etc/apt/apt.conf.d/docker-autoremove-suggests
+COPY apt-conf-clean /etc/apt/apt.conf.d/docker-clean
+COPY apt-conf-gzip-indexes /etc/apt/apt.conf.d/docker-gzip-indexes
+COPY apt-conf-no-languages /etc/apt/apt.conf.d/docker-no-languages
+
 RUN p=/usr/share/man/man && mkdir -p ${p}1 ${p}2 ${p}3 ${p}4 ${p}5 ${p}6 ${p}7
-RUN apt-get update -y -q && apt-get install -y -q --no-install-recommends apt-utils
+RUN apt-get update -y -q && apt-get install -y -q apt-utils
 
 # bug in dash package -12Nov2018 with hellekin
-RUN update-alternatives --force --all --skip-auto
-RUN apt-mark hold dash && apt-get upgrade -y -q
+# RUN apt-mark hold dash && apt-get upgrade -y -q
 
-RUN apt-get install -y -q --no-install-recommends \
-   wget git procps iproute2 tmux screen htop iftop acl netcat-openbsd \
+# removed: --allow-downgrades 
+# bash bash-builtins bash-completion
+# tmux screen htop iftop gnupg
+RUN apt-get install -y -q \
+   wget curl git procps iproute2 acl netcat-openbsd \
    net-tools vim-tiny nano-tiny adduser dmsetup inetutils-ping netbase \
-   bash bash-builtins bash-completion openssh-client gnupg ca-certificates \
+   openssh-client ca-certificates apt-transport-https \
 && apt-get clean \
 && chmod +x /tini
+
+RUN update-alternatives --force --all --skip-auto
 
 WORKDIR /root
 ENTRYPOINT ["/tini", "--"]
