@@ -30,6 +30,9 @@ ENV RUSTUP_HOME=/opt/rust \
 RUN wget https://sh.rustup.rs -O rustup && sh ./rustup -y --default-toolchain nightly
 #	&& rustup install -y nightly && rustup default -y nightly
 
+# install wasm-pack along with a bunch of cargo deps
+RUN cargo install wasm-pack
+
 ENV PATH=/opt/rust/bin:$PATH
 
 CMD /bin/bash
