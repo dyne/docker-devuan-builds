@@ -3,7 +3,7 @@
 # run to generate almost identical dockerfiles from a single template
 # Docker.template and Docker.template-debuild
 
-for i in jessie ascii beowulf chimaera ceres; do
+for i in jessie ascii beowulf chimaera daedalus ceres; do
 	echo "$i"
 	sed "s/%REL%/${i}/g" Dockerfile.template > Dockerfile.${i};
 	sed "s/%REL%/${i}/g" Dockerfile.template-debuild > Dockerfile.${i}-debuild;

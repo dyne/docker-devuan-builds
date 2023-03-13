@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/paddy-hack/devuan/slim:ascii
+FROM devuan/devuan:ascii
 LABEL maintainer="Denis Roio <jaromil@dyne.org>" \
 	  homepage="https://github.com/dyne/docker-base-builds"
 
@@ -15,6 +15,7 @@ COPY apt-conf-autoremove-suggests /etc/apt/apt.conf.d/docker-autoremove-suggests
 COPY apt-conf-clean /etc/apt/apt.conf.d/docker-clean
 COPY apt-conf-gzip-indexes /etc/apt/apt.conf.d/docker-gzip-indexes
 COPY apt-conf-no-languages /etc/apt/apt.conf.d/docker-no-languages
+RUN echo "Acquire::Retries \"5\";" > /etc/apt/apt.conf.d/avoid-timeouts
 
 RUN p=/usr/share/man/man && mkdir -p ${p}1 ${p}2 ${p}3 ${p}4 ${p}5 ${p}6 ${p}7
 RUN apt-get update -y -q && apt-get install -y -q apt-utils
