@@ -5,6 +5,16 @@ ceres: FORCE
 		-t dyne/devuan:ceres \
 		--force-rm .
 
+excalibur: FORCE
+	docker build --no-cache -f Dockerfile.excalibur \
+		-t dyne/devuan:excalibur \
+		--force-rm .
+
+daedalus: FORCE
+	docker build --no-cache -f Dockerfile.daedalus \
+		-t dyne/devuan:daedalus \
+		--force-rm .
+
 chimaera: FORCE
 	docker build --no-cache -f Dockerfile.chimaera \
 		-t dyne/devuan:chimaera \

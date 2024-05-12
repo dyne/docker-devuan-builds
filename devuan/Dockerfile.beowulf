@@ -18,22 +18,22 @@ COPY apt-conf-no-languages /etc/apt/apt.conf.d/docker-no-languages
 RUN echo "Acquire::Retries \"5\";" > /etc/apt/apt.conf.d/avoid-timeouts
 
 RUN p=/usr/share/man/man && mkdir -p ${p}1 ${p}2 ${p}3 ${p}4 ${p}5 ${p}6 ${p}7
-RUN apt-get update -y -q && apt-get install -y -q apt-utils
+RUN apt-get update -y -q && apt-get install -y -q apt-utils \
+&&  apt-get install -y -q \
+   wget curl git procps iproute2 acl netcat-openbsd \
+   net-tools vim-tiny nano-tiny adduser dmsetup inetutils-ping netbase \
+   openssh-client ca-certificates apt-transport-https \
+&& update-alternatives --force --all --skip-auto \
+&& apt-get -yq clean \
+&& rm -f /var/log/dpkg.log /var/log/apt/* /var/log/alternatives.log \
+&& chmod +x /tini
+# removed: --allow-downgrades 
+# bash bash-builtins bash-completion
+# tmux screen htop iftop gnupg
 
 # bug in dash package -12Nov2018 with hellekin
 # RUN apt-mark hold dash && apt-get upgrade -y -q
 
-# removed: --allow-downgrades 
-# bash bash-builtins bash-completion
-# tmux screen htop iftop gnupg
-RUN apt-get install -y -q \
-   wget curl git procps iproute2 acl netcat-openbsd \
-   net-tools vim-tiny nano-tiny adduser dmsetup inetutils-ping netbase \
-   openssh-client ca-certificates apt-transport-https \
-&& apt-get clean \
-&& chmod +x /tini
-
-RUN update-alternatives --force --all --skip-auto
 
 WORKDIR /root
 ENTRYPOINT ["/tini", "--"]
